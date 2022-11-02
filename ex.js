@@ -39,7 +39,6 @@ export default function Ex() {
             // selection='end:2'
             // secureTextEntry='true'
             // enablesReturnKeyAutomatically='true'
-// keyboardAppearance='dark'
 // keyboardType='visible-password'
             // editable='false'
             // clearTextOnFocus ='true'
