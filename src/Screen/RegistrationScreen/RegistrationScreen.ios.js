@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   TextInput,
@@ -10,6 +10,8 @@ import {
   TouchableOpacity,
   ImageBackground,
   Text,
+  Dimensions,
+  Animated
 } from "react-native";
 import { styles } from "./styles";
 
@@ -19,49 +21,81 @@ const RegistrationScreen = () => {
   const [password, setPassword] = useState('');
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
+  const windowWidth = Dimensions.get('window').width;
+  const windowHeight = Dimensions.get('window').height;
+
   const nameHandler = (text) => setName(text);
   const emailHandler = (text) => setEmail(text);
   const passwordHandler = (text) => setPassword(text);
 
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
-    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
-      setIsShowKeyboard(false);
+    const hide = Keyboard.addListener("keyboardWillHide", () => {
+      keyboardHide();
     });
 
     return () => {
-      hideSubscription.remove();
+      hide.remove();
     };
   }, []);
 
+  // useEffect(() => {
+  //   const show = Keyboard.addListener("keyboardWillShow", () => {
+  //     setIsShowKeyboard(true);
+  //   });
+
+  //   return () => {
+  //     show.remove();
+  //   };
+  // }, []);
+
+  const fadeIn = () => {
+    // Will change fadeAnim value to 1 in 5 seconds
+    Animated.timing(fadeAnim, {
+      // toValue: 0,
+      // duration: 5000
+    }).start();
+  };
+
   const onLogin = () => {
-    Alert.alert("Credentials", `${name} + ${password}`);
     console.log(name);
+    console.log(email);
     console.log(password);
   };
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
-    Keyboard.dismiss
+    Keyboard.dismiss();
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
         <ImageBackground
           source={require('../../images/registration/registerBack.png')}
-          style={styles.backgroundImage}
+          style={{
+            ...styles.backgroundImage,
+            width: windowWidth,
+            height: windowHeight,
+          }}
         >
           <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          // behavior="position"
+          // contentContainerStyle={{ marginBottom: isShowKeyboard ? -185 : 0 }}
           >
-            <View style={styles.whiteBox}>
+            <Animated.View style={[
+              styles.whiteBox,
+              {
+                opacity: fadeAnim
+              }
+              // marginBottom: isShowKeyboard ? 120 : 0
+            ]}>
               <View style={styles.titleBox}>
                 <Text style={styles.title}> Реєстрація </Text>
               </View>
-              <View style={styles.form}>
-                <View
-                  style={{ marginBottom: isShowKeyboard ? 32 : 0 }}
-                >
+              <Animated.View style={styles.form}>
+                <View>
                   <TextInput
                     value={name}
                     onChangeText={nameHandler}
@@ -79,7 +113,6 @@ const RegistrationScreen = () => {
                     clearButtonMode='while-editing'
                     style={styles.input}
                     onFocus={() => setIsShowKeyboard(true)}
-                  // selectionColor='#7cfc00'
                   />
                   <TextInput
                     value={password}
@@ -91,24 +124,22 @@ const RegistrationScreen = () => {
                     onFocus={() => setIsShowKeyboard(true)}
                   />
                 </View>
-                <View style={{ display: isShowKeyboard && 'none' }}>
-                  <TouchableOpacity
-                    style={styles.button}
-                    activeOpacity={0.6}
-                    onPress={() => setIsShowKeyboard(false)}
-                  >
-                    <Text style={styles.buttonText}> Зареєструватися </Text>
-                  </TouchableOpacity>
-                  <View style={styles.haveAccountBox}>
-                    <Text style={styles.haveAccountText}> Вже є акаунт? Увійти </Text>
-                  </View>
-                </View>
-              </View>
-            </View>
+                <TouchableOpacity
+                  style={styles.button}
+                  activeOpacity={0.6}
+                  onPress={onLogin}
+                >
+                  <Text style={styles.buttonText}> Зареєструватися </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.haveAccountBox}>
+                  <Text style={styles.haveAccountText}> Вже є акаунт? Увійти </Text>
+                </TouchableOpacity>
+              </Animated.View>
+            </Animated.View>
           </KeyboardAvoidingView>
         </ImageBackground>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableWithoutFeedback >
   );
 };
 

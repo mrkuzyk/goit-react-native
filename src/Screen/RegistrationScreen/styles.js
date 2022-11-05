@@ -4,20 +4,24 @@ import { colors } from "../../variables/colors";
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative',
     // alignItems: "center",
     // justifyContent: "center",
-    backgroundColor: "#ecf0f1",
+    justifyContent: 'flex-end',
+    backgroundColor: colors.example,
   },
   backgroundImage: {
-    flex: 1,
-    resizeMode: 'cover',
-    // alignItems: 'center',
+    position: 'absolute',
+    top: 0,
+    left: 0,
     justifyContent: 'flex-end',
   },
   whiteBox: {
+    position: 'relative',
     backgroundColor: colors.buttonText,
     borderTopLeftRadius: 25,
-    borderTopRightRadius: 25
+    borderTopRightRadius: 25,
+    paddingBottom: 78,
   },
   titleBox: {
     alignItems: 'center',
@@ -64,7 +68,7 @@ export const styles = StyleSheet.create({
   haveAccountBox: {
     alignItems: 'center',
     marginTop: 16,
-    marginBottom: 78,
+    // marginBottom: 78,
   },
   haveAccountText: {
     fontWeight: '400',
