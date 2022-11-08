@@ -45,7 +45,7 @@ export const styles = StyleSheet.create({
     color: colors.basicText,
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: colors.inputBorder,
+    // borderColor: colors.inputBorder,
     backgroundColor: colors.inputBackgroundColor,
     padding: 16,
     marginTop: 16,

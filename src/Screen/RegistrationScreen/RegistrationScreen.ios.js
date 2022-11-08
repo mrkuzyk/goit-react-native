@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+// import * as SplashScreen from 'expo-splash-screen';
 import {
   View,
   TextInput,
@@ -14,25 +15,31 @@ import {
   Animated
 } from "react-native";
 import { styles } from "./styles";
+import { colors } from "../../variables/colors";
 
 const RegistrationScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false); // показується клавіатура чи ні
 
-  const windowWidth = Dimensions.get('window').width;
-  const windowHeight = Dimensions.get('window').height;
+  const [focusName, setFocusName] = useState(false);
+  const [focusEmail, setFocusEmail] = useState(false);
+  const [focusPassword, setFocusPassword] = useState(false);
+
+  const windowWidth = Dimensions.get('window').width; // для фону
+  const windowHeight = Dimensions.get('window').height; // для фону
 
   const nameHandler = (text) => setName(text);
   const emailHandler = (text) => setEmail(text);
   const passwordHandler = (text) => setPassword(text);
 
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const marginAnimated = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const hide = Keyboard.addListener("keyboardWillHide", () => {
       keyboardHide();
+      marginAnimated.current = new Animated.Value(2);
     });
 
     return () => {
@@ -40,23 +47,41 @@ const RegistrationScreen = () => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   const show = Keyboard.addListener("keyboardWillShow", () => {
-  //     setIsShowKeyboard(true);
-  //   });
+  useEffect(() => {
+    const show = Keyboard.addListener("keyboardWillShow", () => {
+      setIsShowKeyboard(true);
+      marginAnimated.current = new Animated.Value(1);
+    });
 
-  //   return () => {
-  //     show.remove();
-  //   };
-  // }, []);
+    return () => {
+      show.remove();
+    };
+  }, []);
 
-  const fadeIn = () => {
-    // Will change fadeAnim value to 1 in 5 seconds
-    Animated.timing(fadeAnim, {
-      // toValue: 0,
-      // duration: 5000
-    }).start();
-  };
+  useEffect(() => {
+    if (!isShowKeyboard) {
+      Animated.timing(
+        // коли клавіатура схована
+        marginAnimated,
+        {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true
+        }
+      ).start();
+      return;
+    };
+
+    Animated.timing(
+      // коли клавіатура показана
+      marginAnimated,
+      {
+        toValue: 2,
+        duration: 200,
+        useNativeDriver: true
+      }
+    ).start();
+  }, [marginAnimated, isShowKeyboard])
 
   const onLogin = () => {
     console.log(name);
@@ -80,63 +105,91 @@ const RegistrationScreen = () => {
             height: windowHeight,
           }}
         >
-          <KeyboardAvoidingView
-          // behavior="position"
-          // contentContainerStyle={{ marginBottom: isShowKeyboard ? -185 : 0 }}
+          {/* <KeyboardAvoidingView
+          behavior="position"
+          contentContainerStyle={{ marginBottom: isShowKeyboard ? -185 : 0 }}
+          > */}
+          <Animated.View
+            style={{
+              ...styles.whiteBox,
+              transform: [{
+                translateY: isShowKeyboard
+                  ?
+                  marginAnimated.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [120, 0]
+                  })
+                  :
+                  marginAnimated.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [120, 0]
+                  }),
+              }]
+            }}
+          // style={styles.whiteBox}
           >
-            <Animated.View style={[
-              styles.whiteBox,
-              {
-                opacity: fadeAnim
-              }
-              // marginBottom: isShowKeyboard ? 120 : 0
-            ]}>
-              <View style={styles.titleBox}>
-                <Text style={styles.title}> Реєстрація </Text>
+
+            <View style={styles.titleBox}>
+              <Text style={styles.title}> Реєстрація </Text>
+            </View>
+            <View style={styles.form}>
+              <View>
+                <TextInput
+                  value={name}
+                  onChangeText={nameHandler}
+                  placeholder="Ім'я"
+                  secureTextEntry={false}
+                  clearButtonMode='while-editing'
+                  style={{
+                    ...styles.input,
+                    borderColor: focusName ? 'red' : colors.inputBorder
+                  }}
+                  keyboardType='numbers-and-punctuation'
+                  onFocus={() => setFocusName(true)}
+                  onBlur={() => setFocusName(false)}
+                />
+                <TextInput
+                  value={email}
+                  onChangeText={emailHandler}
+                  placeholder="Електронна пошта"
+                  secureTextEntry={false}
+                  clearButtonMode='while-editing'
+                  style={{
+                    ...styles.input,
+                    borderColor: focusEmail ? 'red' : colors.inputBorder
+                  }}
+                  keyboardType='numbers-and-punctuation'
+                  onFocus={() => setFocusEmail(true)}
+                  onBlur={() => setFocusEmail(false)}
+                />
+                <TextInput
+                  value={password}
+                  onChangeText={passwordHandler}
+                  placeholder="Пароль"
+                  secureTextEntry={true}
+                  clearButtonMode='while-editing'
+                  style={{
+                    ...styles.input,
+                    borderColor: focusPassword ? 'red' : colors.inputBorder
+                  }}
+                  keyboardType='numbers-and-punctuation'
+                  onFocus={() => setFocusPassword(true)}
+                  onBlur={() => setFocusPassword(false)}
+                />
               </View>
-              <Animated.View style={styles.form}>
-                <View>
-                  <TextInput
-                    value={name}
-                    onChangeText={nameHandler}
-                    placeholder="Ім'я"
-                    secureTextEntry={false}
-                    clearButtonMode='while-editing'
-                    style={styles.input}
-                    onFocus={() => setIsShowKeyboard(true)}
-                  />
-                  <TextInput
-                    value={email}
-                    onChangeText={emailHandler}
-                    placeholder="Електронна пошта"
-                    secureTextEntry={false}
-                    clearButtonMode='while-editing'
-                    style={styles.input}
-                    onFocus={() => setIsShowKeyboard(true)}
-                  />
-                  <TextInput
-                    value={password}
-                    onChangeText={passwordHandler}
-                    placeholder="Пароль"
-                    secureTextEntry={true}
-                    clearButtonMode='while-editing'
-                    style={styles.input}
-                    onFocus={() => setIsShowKeyboard(true)}
-                  />
-                </View>
-                <TouchableOpacity
-                  style={styles.button}
-                  activeOpacity={0.6}
-                  onPress={onLogin}
-                >
-                  <Text style={styles.buttonText}> Зареєструватися </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.haveAccountBox}>
-                  <Text style={styles.haveAccountText}> Вже є акаунт? Увійти </Text>
-                </TouchableOpacity>
-              </Animated.View>
-            </Animated.View>
-          </KeyboardAvoidingView>
+              <TouchableOpacity
+                style={styles.button}
+                activeOpacity={0.6}
+                onPress={onLogin}
+              >
+                <Text style={styles.buttonText}> Зареєструватися </Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.haveAccountBox}>
+                <Text style={styles.haveAccountText}> Вже є акаунт? Увійти </Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+          {/* </KeyboardAvoidingView> */}
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback >
