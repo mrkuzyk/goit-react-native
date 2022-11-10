@@ -23,6 +23,32 @@ export const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     paddingBottom: 78,
   },
+  imageBox: {
+    position: 'absolute',
+    top: -60,
+    alignSelf: 'center',
+    width: 120,
+    height: 120,
+    backgroundColor: colors.inputBackgroundColor,
+    borderRadius: 16,
+  },
+  addPhotoIconBox: {
+    position: 'absolute',
+    right: -10,
+    width: 25,
+    height: 25,
+    // flex: 1,
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    borderWidth: 1,
+    borderRadius: 13,
+    borderColor: colors.buttonBackground,
+    padding: 6
+  },
+  addPhotoIcon: {
+    color: colors.buttonBackground,
+    margin: 0
+  },
   titleBox: {
     alignItems: 'center',
     marginTop: 92,

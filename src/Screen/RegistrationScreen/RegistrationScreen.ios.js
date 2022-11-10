@@ -105,10 +105,6 @@ const RegistrationScreen = () => {
             height: windowHeight,
           }}
         >
-          {/* <KeyboardAvoidingView
-          behavior="position"
-          contentContainerStyle={{ marginBottom: isShowKeyboard ? -185 : 0 }}
-          > */}
           <Animated.View
             style={{
               ...styles.whiteBox,
@@ -128,8 +124,13 @@ const RegistrationScreen = () => {
             }}
           // style={styles.whiteBox}
           >
-
+            <View style={styles.imageBox}>
+              <TouchableOpacity style={styles.addPhotoIconBox}>
+                <Text style={styles.addPhotoIcon}> + </Text>
+              </TouchableOpacity>
+            </View>
             <View style={styles.titleBox}>
+
               <Text style={styles.title}> Реєстрація </Text>
             </View>
             <View style={styles.form}>
@@ -189,7 +190,6 @@ const RegistrationScreen = () => {
               </TouchableOpacity>
             </View>
           </Animated.View>
-          {/* </KeyboardAvoidingView> */}
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback >
