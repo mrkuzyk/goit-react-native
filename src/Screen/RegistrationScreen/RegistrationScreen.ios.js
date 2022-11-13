@@ -12,7 +12,8 @@ import {
   ImageBackground,
   Text,
   Dimensions,
-  Animated
+  Animated,
+  StatusBar
 } from "react-native";
 import { styles } from "./styles";
 import { colors } from "../../variables/colors";
@@ -97,6 +98,9 @@ const RegistrationScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container}>
+        <StatusBar
+          barStyle='dark-content'
+        />
         <ImageBackground
           source={require('../../images/registration/registerBack.png')}
           style={{
@@ -126,7 +130,7 @@ const RegistrationScreen = () => {
           >
             <View style={styles.imageBox}>
               <TouchableOpacity style={styles.addPhotoIconBox}>
-                <Text style={styles.addPhotoIcon}> + </Text>
+                <Text style={styles.addPhotoIcon}>+</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.titleBox}>
@@ -159,7 +163,7 @@ const RegistrationScreen = () => {
                     ...styles.input,
                     borderColor: focusEmail ? 'red' : colors.inputBorder
                   }}
-                  keyboardType='numbers-and-punctuation'
+                  keyboardType='ascii-capable'
                   onFocus={() => setFocusEmail(true)}
                   onBlur={() => setFocusEmail(false)}
                 />
@@ -173,7 +177,7 @@ const RegistrationScreen = () => {
                     ...styles.input,
                     borderColor: focusPassword ? 'red' : colors.inputBorder
                   }}
-                  keyboardType='numbers-and-punctuation'
+                  keyboardType='ascii-capable'
                   onFocus={() => setFocusPassword(true)}
                   onBlur={() => setFocusPassword(false)}
                 />

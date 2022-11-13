@@ -33,21 +33,24 @@ export const styles = StyleSheet.create({
     borderRadius: 16,
   },
   addPhotoIconBox: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     position: 'absolute',
-    right: -10,
+    right: -12,
+    bottom: 14,
     width: 25,
     height: 25,
-    // flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
     borderWidth: 1,
     borderRadius: 13,
     borderColor: colors.buttonBackground,
-    padding: 6
+    backgroundColor: colors.buttonText,
   },
   addPhotoIcon: {
+    position: 'absolute',
+    fontWeight: '200',
+    fontSize: 25,
     color: colors.buttonBackground,
-    margin: 0
   },
   titleBox: {
     alignItems: 'center',
